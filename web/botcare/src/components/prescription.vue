@@ -196,7 +196,8 @@ created(){
        .then((res) => {
          console.log(res.data);
          this.id = res.data.id;
-         this.patients.push(res.data.name);
+         var str_name = this.id + " - " + res.data.name
+         this.patients.push(str_name);
        })
        .catch((err) =>{
          console.log(err)

@@ -9,45 +9,32 @@
       >
         <v-toolbar-title>QUESTIONARE</v-toolbar-title>
       </v-toolbar>
-
-
   <v-card-text>
-      <v-text-field
-
-                             <v-flex xs12 sm6 d-flex>
-                      <v-select
-                        :items="questions"
-                        label="QUESTION"
-                         v-model="question"
-                          type="text"
-                      ></v-select>
-                    </v-flex>
-
-
-
-
-
-        <v-textarea
-          box
-          label="ANSWER"
-          type="text"
-          v-model="answer"></v-textarea>
-
-
-      </v-card-text>
-
-      <v-divider></v-divider>
-
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-          color="primary"
-          @click="submit">
-            Submit
-          </v-btn>
-        </v-card-actions>
-
+    <v-text-field
+      <v-flex xs12 sm6 d-flex>
+        <v-select
+          :items="questions"
+          label="QUESTION"
+           v-model="question"
+            type="text"
+        ></v-select>
+      </v-flex>
+      <v-textarea
+        box
+        label="ANSWER"
+        type="text"
+        v-model="answer">
+      </v-textarea>
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+      color="primary"
+      @click="submit">
+        Submit
+      </v-btn>
+    </v-card-actions>
     </v-card>
   </v-flex>
 </v-layout>

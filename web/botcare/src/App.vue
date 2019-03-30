@@ -11,15 +11,9 @@
   <v-toolbar-items class="hidden-sm-and-down">
     <v-btn flat to="/prescription">Prescription</v-btn>
     <v-btn flat to="/queries">Queries</v-btn>
+    <v-btn flat to="/doctor">Doctor</v-btn>
       </v-toolbar-items>
     </v-toolbar>
-<<<<<<< 1343e11197264a7786f2dceffa0d0f6404348784
-
-      <router-link to="/prescription">Prescription</router-link> |
-      <router-link to="/queries">Queries</router-link> |
-      <router-link to="/doctor">Doctor</router-link>
-=======
->>>>>>> Created socket for push notification
     </div>
     <router-view/>
   </div>

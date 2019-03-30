@@ -173,33 +173,6 @@ app.get("/", (req,res)=>{
    return res.send("Welcome to BotCare");
 });
 
-app.get("/testQuery", (req,result)=>{
-  myvar = "What is the name of the doctor"
-  axios.post('http://localhost:5000/testQuery', {
-    myvar
-  })
-  .then((res) => {
-    strResponse = res.data;
-    strResponse = strResponse.substring(1);
-    if(strResponse == "doctor"){
-      //shadrak get data here
-    }
-    else if(strResponse == "hospital"){
-      //shadrak get data here
-    }
-    else if(strResponse == "appointment"){
-      //shadrak get data here
-    }
-    else if(strResponse == "dose"){
-      //shadrak get data here
-    }
-    return result.send(strResponse);
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-});
-
 app.post('/addQuery', (req, result) => {
   queryQuestion = req.body.ques
   queryAnswer = req.body.ans
@@ -232,7 +205,7 @@ app.post('/prescription', (req, res) => {
 app.post('/prescriptionSubmit', (req, res) => {
     prescription_id = random.integer(301, 400);
     console.log(prescription_id);
-    patient_id = req.body.p_id
+    patient_id = "101"
     diagnose = req.body.SELECT;
     name = req.body.PATIENT;
     age = req.body.age;
@@ -247,7 +220,18 @@ app.post('/prescriptionSubmit', (req, res) => {
     connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
         if(err) throw err;
         console.log("data inserted");
-        return res.send("Success")
+        io.sockets.emit('newRegular',"Thank you for visiting the doctor, here is the details for your next appointment")
+        connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+          if(err) throw err;
+          doctor_name = result[0].name;
+          var json_response = {}
+          json_response["type"] = "appointment";
+          json_response["name"] = doctor_name;
+          json_response["date"] = app_date;
+          console.log(json_response)
+          io.sockets.emit('newAppointment',json_response)
+          return res.send("Success")
+        });
     });
 });
 
@@ -274,6 +258,15 @@ app.get('/getPendings', (req, result) => {
       json_response.push(json_object)
     }
     return result.send(json_response)
+  });
+});
+
+app.post('/updateAppointment', (req, res) => {
+  p_id = "101"
+  app_date = req.body.app_date
+  connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
+    if (err) throw err;
+    return res.send("Success")
   });
 });
 
