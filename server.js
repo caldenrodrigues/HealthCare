@@ -77,6 +77,7 @@ io.on('connection', (socket) => {
             var json_response = {}
             json_response["type"] = "appointment";
             json_response["name"] = doctor_name;
+            json_response["date"] = appointment_date;
             console.log(json_response)
             io.sockets.emit('newAppointment',json_response)
           });
@@ -155,9 +156,10 @@ app.get("/testQuery", (req,result)=>{
   })
 });
 
-app.get('/addQuery', (req, result) => {
-  queryQuestion = "Can i remove my plaster?";
-  queryAnswer = "No, It is suggested to wait till the next appointment and let the doctor remove it."
+app.post('/addQuery', (req, result) => {
+  queryQuestion = req.body.ques
+  queryAnswer = req.body.ans
+  console.log("in")
   axios.post('http://localhost:5000/addQuery', {
     queryQuestion,
     queryAnswer
@@ -170,7 +172,7 @@ app.get('/addQuery', (req, result) => {
   })
 });
 
-app.get('/getQuery', (req, result) => {
+app.post('/getQuery', (req, result) => {
   axios.post('http://localhost:5000/getQuery', {
   })
   .then((res) => {
