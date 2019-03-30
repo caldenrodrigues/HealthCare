@@ -2,7 +2,7 @@
   "name": "healthcare",
   "version": "1.0.0",
   "description": "Post Healtcare for patients",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/caldenrodrigues/HealthCare/issues"
   },
-  "homepage": "https://github.com/caldenrodrigues/HealthCare#readme"
+  "homepage": "https://github.com/caldenrodrigues/HealthCare#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  }
 }
