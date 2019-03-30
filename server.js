@@ -48,6 +48,16 @@ io.on('connection', (socket) => {
         strResponse = strResponse.substring(2);
       }
       else{
+        const queryQuestion = myvar
+        axios.post('http://localhost:5000/nplQuery', {
+          queryQuestion
+        })
+        .then((res) => {
+          return 
+        })
+        .catch((err) => {
+          console.log(err)
+        })
         connection.query("Insert into pendings values(?,?,?)",[patient_id, myvar, ""], function (err, result, fields) {
           if (err) throw err;
         });
@@ -118,6 +128,9 @@ io.on('connection', (socket) => {
           io.sockets.emit('newDose',json_response)
         });
       }
+      else if(strResponse == "reshedule"){
+        io.sockets.emit("changeAppointment")
+      }
       else{
         io.sockets.emit('newRegular',strResponse)
       }
@@ -126,6 +139,17 @@ io.on('connection', (socket) => {
     .catch((err) => {
       console.log(err)
     })
+  })
+  socket.on("changedAppointment", (data) => {
+    p_id = "101"
+    app_date = data
+    connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
+      if (err) throw err;
+      return res.send("Success")
+    });
+  });
+  socket.on("forgotMeds", (data) => {
+    io.sockets.emit('newRegular',"Missing your medication too frequently is not advicable")
   })
 })
 
