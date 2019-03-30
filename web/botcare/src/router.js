@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Prescription from './views/Prescription.vue'
 import Queries from './views/Queries.vue'
+import Doctor from './views/Doctor.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -29,6 +31,11 @@ export default new Router({
       path: '/queries',
       name: 'queries',
       component: Queries
+    },
+    {
+      path: '/doctor',
+      name: 'doctor',
+      component: Doctor
     }
 
   ]

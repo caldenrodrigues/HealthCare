@@ -1,6 +1,6 @@
 <div align="center">
 
-![Health Care](https://imgur.com/cRFAecF.png)
+<p align="center"><h1>BotCare</h1></p>
 
 [![Hackathon](https://img.shields.io/badge/hackathon-Unscript-orange.svg)](http://unscript2k19.me/) 
 [![Status](https://img.shields.io/badge/status-active-green.svg)]() 
@@ -8,12 +8,13 @@
 [![Pending Pull-Requests](http://githubbadges.herokuapp.com/chaitanyadukkipaty/LegoDoc/pulls.svg?style=flat-square)](https://github.com/chaitanyadukkipaty/LegoDoc/pulls) 
 [![License](https://img.shields.io/badge/license-GNU-blue.svg)](LICENSE.md)
 
-
 </div>
 
 ---
 
 <p align="center">Health care for patients post surgery</p>
+
+![LegoDoc](https://i.imgur.com/kibi2Pf.png)
 
 # Table of Content
 + [About](#description)
