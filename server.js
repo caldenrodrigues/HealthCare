@@ -58,22 +58,54 @@ io.on('connection', (socket) => {
             json_response["contact"] = doctor_contact
             json_response["spec"] = doctor_spec
             console.log(json_response)
-            io.sockets.emit('newResponse',json_response)
+            io.sockets.emit('newDoctor',json_response)
           })
        });
 
       }
       else if(strResponse == "hospital"){
-        io.sockets.emit('newResponse',strResponse)
+        io.sockets.emit('newRegular',strResponse)
       }
       else if(strResponse == "appointment"){
-        //shadrak get data here
+
+        connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+          if (err) throw err;
+          appointment_date = result[0].app_date;
+          doctor_id = result[0].d_id;
+          connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+            doctor_name = result[0].name;
+            var json_response = {}
+            json_response["type"] = "appointment";
+            json_response["name"] = doctor_name;
+            console.log(json_response)
+            io.sockets.emit('newAppointment',json_response)
+          });
+        });
+
       }
       else if(strResponse == "dose"){
-        //shadrak get data here
+        connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+          if (err) throw err;
+          var json_response = {}
+          json_response["drug"] = result[0].drugs;
+          json_response["unit"] = result[0].unit;
+          var date = new Date();
+          var current_hour = date.getHours();
+          if(current_hour<9){
+            json_response["time"] = "9:00am";
+          }
+          else if(current_hour<13){
+              json_response["time"] = "1:00pm";
+          }
+          else{
+            json_response["time"] = "9:00pm";
+          }
+          console.log(json_response)
+          io.sockets.emit('newDose',json_response)
+        });
       }
       else{
-        io.sockets.emit('newResponse',strResponse)
+        io.sockets.emit('newRegular',strResponse)
       }
 
     })
@@ -82,9 +114,6 @@ io.on('connection', (socket) => {
     })
   })
 })
-
-
-
 
 
 app.use(bodyParser.json());
