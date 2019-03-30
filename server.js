@@ -3,6 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var server = require('http').Server(app);
+//var generator = require('generate-password');
+//var random = require('random-number');
+var {Random} = require('random-js');
+var random = new Random();
 app.use(cors());
 const axios = require('axios');
 var mysql = require('mysql');
@@ -12,8 +16,10 @@ const io = require("socket.io")(server)
 //mysql
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: process.env.database_user,
-    password: process.env.database_password,
+    // user: process.env.database_user,
+    // password: process.env.database_password,
+    user: 'root',
+    password: 'shadrak',
     database: 'Healthcare'
 });
 
@@ -77,6 +83,7 @@ io.on('connection', (socket) => {
             var json_response = {}
             json_response["type"] = "appointment";
             json_response["name"] = doctor_name;
+            json_response["date"] = appointment_date;
             console.log(json_response)
             io.sockets.emit('newAppointment',json_response)
           });
@@ -127,7 +134,8 @@ app.use(bodyParser.urlencoded({
 
 app.get("/", (req,res)=>{
    return res.send("Welcome to BotCare");
- });
+});
+
 app.get("/testQuery", (req,result)=>{
   myvar = "What is the name of the doctor"
   axios.post('http://localhost:5000/testQuery', {
@@ -155,9 +163,10 @@ app.get("/testQuery", (req,result)=>{
   })
 });
 
-app.get('/addQuery', (req, result) => {
-  queryQuestion = "Can i remove my plaster?";
-  queryAnswer = "No, It is suggested to wait till the next appointment and let the doctor remove it."
+app.post('/addQuery', (req, result) => {
+  queryQuestion = req.body.ques
+  queryAnswer = req.body.ans
+  console.log("in")
   axios.post('http://localhost:5000/addQuery', {
     queryQuestion,
     queryAnswer
@@ -168,6 +177,46 @@ app.get('/addQuery', (req, result) => {
   .catch((err) => {
     console.log(err)
   })
+});
+
+app.post('/prescription', (req, res) => {
+    console.log('prescription page loaded');
+    connection.query('select name,age from Patient where p_id=101;', function(err, result, fields){
+        if (err) throw err;
+        var json_response = {}
+        json_response["id"] = "103"
+        json_response["name"] = result[0].name
+        json_response["age"] = result[0].age
+        return res.send(json_response);
+    });
+
+});
+
+app.post('/prescriptionSubmit', (req, res) => {
+
+    prescription_id = random.integer(301, 400);
+    console.log(prescription_id);
+    // prescription_id = generator.generate({
+    //     length: 3,
+    //     numbers: true
+    // });;
+    patient_id = req.body.p_id
+    diagnose = req.body.SELECT;
+    name = req.body.PATIENT;
+    age = req.body.age;
+    drug = req.body.DRUG;
+    unit = req.body.UNIT;
+    dose = req.body.DOSE;
+    app_date = req.body.DATE;
+    date = new Date();
+    precaution = req.body.PRECAUTION;
+    doctor_id = '201';
+    console.log('data received from prescription after submit.');
+    connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
+        if(err) throw err;
+        console.log("data inserted");
+        return res.send("Success")
+    });
 });
 
 app.get('/getQuery', (req, result) => {

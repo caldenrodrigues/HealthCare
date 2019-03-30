@@ -9,6 +9,7 @@ import json
 #ChatBot
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -34,14 +35,19 @@ def get_response():
 def addQuery():
 	queryQuestion = request.get_json()["queryQuestion"]
 	queryAnswer = request.get_json()["queryAnswer"]
-	with open("data/fracture.yml","a") as f:
+	with open("data/fracture_default.yml","a") as f:
 		f.write("  - " + queryQuestion + "\n")
 		f.write("  - " + queryAnswer + "\n")
+	chatbot = ChatBot('Bot', storage_adapter='chatterbot.storage.SQLStorageAdapter', trainer='chatterbot.trainers.ListTrainer')
+	for file in os.listdir('data/'):
+		convData = open(r'data/' + file,encoding='latin-1').readlines()
+		trainer = ListTrainer(chatbot)
+		trainer.train(convData)
 	return "Success"
 
 @app.route('/getQuery', methods = ['POST','GET'])
 def getQuery():
-	with open("data/fracture.yml","r") as f:
+	with open("data/fracture_default.yml","r") as f:
 		queryList = f.readlines()
 		query = {}
 		query["query"] = queryList
