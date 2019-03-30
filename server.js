@@ -12,11 +12,12 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get("/", (req,res)=>{
-    res.sendFile(__dirname + '/index.html');
+    //res.sendFile(__dirname + '/index.html');
 return res.send("Welcome to BotCare");
 });
 
 io.on('connection', function (socket) {
+    console.log("Socket is connected...");
     socket.emit('start', {hello: 'user'});
     socket.on('demo', (data)=>{
         console.log(data);
@@ -24,6 +25,6 @@ io.on('connection', function (socket) {
 });
 
 //port activation
-server.listen(8081, (req, res) => {
+server.listen(8081, () => {
     console.log("Listening on 8081");
 });
