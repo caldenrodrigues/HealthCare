@@ -19,6 +19,8 @@
                                     <v-select
                                       :items="patients"
                                       label="PATIENT"
+                                       v-model="patient"
+                                        type="text"
                                     ></v-select>
                                   </v-flex>
 
@@ -30,6 +32,8 @@
 <v-select
  :items="dieases"
  label="SELECT"
+  type="text"
+  v-model="select"
 ></v-select>
 </v-flex>
 
@@ -41,11 +45,15 @@
          <v-select
            :items="drugs"
            label="DRUG"
+            type="text"
+            v-model="drug"
          ></v-select>
        </v-flex>
        <v-flex xs12 sm6 md3>
             <v-text-field
               label="UNIT"
+               v-model="unit"
+                type="text"
             ></v-text-field>
           </v-flex>
 
@@ -54,6 +62,8 @@
                 <v-select
                   :items="doses"
                   label="DOSE"
+                   type="text"
+                   v-model="dose"
                 ></v-select>
               </v-flex>
 
@@ -90,6 +100,7 @@
    </v-flex>
    <v-flex xs12>
                  <v-textarea
+                 v-model="precaution"
 
 
                  >
@@ -104,8 +115,8 @@
                   <v-spacer></v-spacer>
                   <v-btn
                   color="primary"
-                  @click="validate">
-                    Validate
+                  @click="submit">
+                    Submit
                   </v-btn>
                 </v-card-actions>
               </v-form>
@@ -114,6 +125,20 @@
         </v-layout>
       </v-container>
     </v-content>
+    <v-snackbar
+        v-model="snackbar"
+        :timeout="3000"
+        :top="true"
+      >
+        {{ this.text }}
+        <v-btn
+          color="pink"
+          flat
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
   </v-app>
 </template>
 <script>
@@ -123,6 +148,7 @@ name: 'Prescription',
 
 data () {
 return {
+  id: "",
   patients: [],
 dieases: ['CATARACT','FACTURE'],
         drugs: ['crocin', 'cyclopan', 'combiflam', 'ocaset'],
@@ -131,15 +157,52 @@ dieases: ['CATARACT','FACTURE'],
      menu: false,
      modal: false,
      menu2: false,
+     snackbar:false,
+     text: ''
 
 }
+},
+methods: {
+  submit() {
+    console.log("IN")
+    const PATIENT=this.patient;
+    const SELECT =this.select;
+    const DRUG=this.drug;
+    const UNIT =this.unit;
+    const DOSE =this.dose;
+    const DATE=this.date;
+    const PRECAUTION=this.precaution;
+    axios.post('http://192.168.43.143:8081/prescriptionSubmit', {
+        PATIENT  ,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
+
+        })
+
+        .then((res) => {
+          this.text = "Successfull";
+        })
+        .catch((err) => {
+          this.text = "Unsuccessfull";
+        });
+        this.snackbar=true;
+
+
+
+
+
+
+
+
+
+
+  }
 },
 created(){
   axios.post('http://192.168.43.143:8081/prescription', {
      })
        .then((res) => {
          console.log(res.data);
-         this.patients.push(res.data);
+         this.id = res.data.id;
+         this.patients.push(res.data.name);
        })
        .catch((err) =>{
          console.log(err)
