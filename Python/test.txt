@@ -2,21 +2,21 @@ categories:
 - Fracture
 conversations:
 - - Hi
-  - What is the name of the Doctor?
+  - I am Chatbot. How can I help you?
+- - What is the name of the Doctor?
   - doctor
-  - what is my doctors name?
-  - doctor
-  - What is the name of the Hospital?
+- - What is the name of the Hospital?
   - hospital
-  - When is my next appointment?
+- - When is my next appointment?
   - appointment
-  - When is my next dose?
+- - When is my next dose?
   - dose
-  - My hand is paining what to do?
+- - My hand is paining what to do?
   - Wait for a day, take painkillers if the pain continues then visit the doctor
-  - I missed my dose
+- - I missed my dose
   - It is ok, dont miss the next one
-  - What all things you can do?
+- - What all things you can do?
   - I can remind you about your prescription, appointments and a lot more
-  - What can you do?
+- - What can you do?
   - I can remind you about your prescription, appointments and a lot more
+

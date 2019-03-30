@@ -12,8 +12,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get("/", (req,res)=>{
-    //res.sendFile(__dirname + '/index.html');
-return res.send("Welcome to BotCare");
+
+
+  return res.send("Welcome to BotCare");
 });
 
 io.on('connection', function (socket) {
