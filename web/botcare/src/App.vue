@@ -15,7 +15,8 @@
     </v-toolbar>
 
       <router-link to="/prescription">Prescription</router-link> |
-      <router-link to="/queries">Queries</router-link>
+      <router-link to="/queries">Queries</router-link> |
+      <router-link to="/doctor">Doctor</router-link>
     </div>
     <router-view/>
   </div>

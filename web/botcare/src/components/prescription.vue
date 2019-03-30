@@ -158,7 +158,7 @@ dieases: ['CATARACT','FACTURE'],
      modal: false,
      menu2: false,
      snackbar:false,
-     text: ''
+     text: ' '
 
 }
 },
@@ -180,7 +180,7 @@ methods: {
         .then((res) => {
           this.text = "Successfull";
         })
-        .catch((err) => {
+        .catch((error) => {
           this.text = "Unsuccessfull";
         });
         this.snackbar=true;
