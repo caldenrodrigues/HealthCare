@@ -3,23 +3,97 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 app.use(cors());
 const axios = require('axios');
+//Socket
+const io = require("socket.io")(server)
+
+io.on('connection', (socket) => {
+  console.log('New User')
+  socket.on('newMessage', (data) => {
+    console.log(data)
+    myvar = data
+    axios.post('http://localhost:5000/testQuery', {
+      myvar
+    })
+    .then((res) => {
+      console.log(res.data)
+      strResponse = res.data;
+      strResponse = strResponse.substring(1);
+      if(strResponse == "doctor"){
+        //shadrak get data here
+      }
+      else if(strResponse == "hospital"){
+        //shadrak get data here
+      }
+      else if(strResponse == "appointment"){
+        //shadrak get data here
+      }
+      else if(strResponse == "dose"){
+        //shadrak get data here
+      }
+      io.sockets.emit('newResponse',strResponse)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  })
+})
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get("/", (req,result)=>{
+app.get("/testQuery", (req,result)=>{
   myvar = "What is the name of the doctor"
-  axios.post('http://localhost:5000/train', {
+  axios.post('http://localhost:5000/testQuery', {
     myvar
   })
   .then((res) => {
-    console.log(res.data);
-    return result.send(res.data);
+    strResponse = res.data;
+    strResponse = strResponse.substring(1);
+    if(strResponse == "doctor"){
+      //shadrak get data here
+    }
+    else if(strResponse == "hospital"){
+      //shadrak get data here
+    }
+    else if(strResponse == "appointment"){
+      //shadrak get data here
+    }
+    else if(strResponse == "dose"){
+      //shadrak get data here
+    }
+    return result.send(strResponse);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+});
+
+app.get('/addQuery', (req, result) => {
+  queryQuestion = "Can i remove my plaster?";
+  queryAnswer = "No, It is suggested to wait till the next appointment and let the doctor remove it."
+  axios.post('http://localhost:5000/addQuery', {
+    queryQuestion,
+    queryAnswer
+  })
+  .then((res) => {
+    return result.send("Success")
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+});
+
+app.get('/getQuery', (req, result) => {
+  axios.post('http://localhost:5000/getQuery', {
+  })
+  .then((res) => {
+    return result.send(res.data)
   })
   .catch((err) => {
     console.log(err)
