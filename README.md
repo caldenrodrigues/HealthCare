@@ -10,12 +10,13 @@
 [![Pending Pull-Requests](http://githubbadges.herokuapp.com/chaitanyadukkipaty/LegoDoc/pulls.svg?style=flat-square)](https://github.com/chaitanyadukkipaty/LegoDoc/pulls) 
 [![License](https://img.shields.io/badge/license-GNU-blue.svg)](LICENSE.md)
 
-
 </div>
 
 ---
 
 <p align="center">Health care for patients post surgery</p>
+
+![LegoDoc](https://i.imgur.com/kibi2Pf.png)
 
 # Table of Content
 + [About](#description)
