@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Prescription from './views/Prescription.vue'
+import Queries from './views/Queries.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -23,6 +24,11 @@ export default new Router({
       path: '/prescription',
       name: 'prescription',
       component: Prescription
+    },
+    {
+      path: '/queries',
+      name: 'queries',
+      component: Queries
     }
 
   ]

@@ -6,6 +6,7 @@
 </head>
       <router-link to="/">Home</router-link> |
       <router-link to="/prescription">Prescription</router-link>
+      <router-link to="/queries">Queries</router-link>
     </div>
     <router-view/>
   </div>
