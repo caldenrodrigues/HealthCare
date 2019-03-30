@@ -2,8 +2,6 @@
 
 <p align="center"><h1>BotCare</h1></p>
 
-![LegoDoc](https://i.imgur.com/kibi2Pf.png)
-
 [![Hackathon](https://img.shields.io/badge/hackathon-Unscript-orange.svg)](http://unscript2k19.me/) 
 [![Status](https://img.shields.io/badge/status-active-green.svg)]() 
 [![Github Issues](http://githubbadges.herokuapp.com/chaitanyadukkipaty/LegoDoc/issues.svg?style=flat-square)](https://github.com/chaitanyadukkipaty/LegoDoc/issues) 
