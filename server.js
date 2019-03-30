@@ -14,7 +14,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: process.env.database_user,
     password: process.env.database_password,
-    database: 'CsiManagementSystem'
+    database: 'Healthcare'
 });
 
 connection.connect(function(err) {
@@ -36,18 +36,22 @@ io.on('connection', (socket) => {
       myvar
     })
     .then((res) => {
-      console.log(res.data)
+
       strResponse = res.data;
-      strResponse = strResponse.substring(1);
+      if(strResponse.substring(0,3) != "I a"){
+        strResponse = strResponse.substring(2);
+      }
+      console.log(strResponse)
       if(strResponse == "doctor"){
 
         connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
           if (err) throw err;
-          connection.query("Select * from Doctor where d_id = ?",[],function(err, result, fields) {
+          doctor_id = result[0].d_id;
+          connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
             if (err) throw err;
             doctor_name = result[0].name;
             doctor_contact = result[0].contact;
-            doctor_spec = result[0].specializtion;
+            doctor_spec = result[0].specialization;
             var json_response = {}
             json_response["type"] = "doctor"
             json_response["name"] = doctor_name
@@ -60,7 +64,7 @@ io.on('connection', (socket) => {
 
       }
       else if(strResponse == "hospital"){
-        //shadrak get data here
+        io.sockets.emit('newResponse',strResponse)
       }
       else if(strResponse == "appointment"){
         //shadrak get data here
