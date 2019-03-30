@@ -1,6 +1,7 @@
 <div align="center">
 
 <p align="center"><h1>BotCare</h1></p>
+
 ![LegoDoc](https://i.imgur.com/kibi2Pf.png)
 
 [![Hackathon](https://img.shields.io/badge/hackathon-Unscript-orange.svg)](http://unscript2k19.me/) 
