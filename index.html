@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <script>
+            var socket = io.connect('http:localhost');
+            socket.on('start', function (data) {
+                console.log(data);
+                socket.emit('demo', {my: 'data'});
+            });        
+        </script>
+    </body>
+</html>
