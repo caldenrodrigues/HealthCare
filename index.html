@@ -2,13 +2,31 @@
 <html>
     <head>
     </head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <body>
         <script>
+            //var socket = io();
             var socket = io.connect('http:localhost');
-            socket.on('start', function (data) {
-                console.log(data);
-                socket.emit('demo', {my: 'data'});
-            });        
+            // socket.on('start', function (data) {
+            //     console.log(data);
+            //     socket.emit('demo', {my: 'data'});
+            // });
+            // $(function() {
+            // $('form').submit(funtion(e) {
+            //     e.preventDefault();
+            //     socket.emit('chat message', $('#m').val());
+            //     $('#m').val('');
+            //     return false;
+            // });
+            // });
+            function click() {
+                console.log('button clicked');
+            }
         </script>
+        <h1>Hi</h1>
+        <form action="" onsubmit="click()">
+            <input id='m' /><button>send</button>
+        </form>
     </body>
 </html>
