@@ -8,7 +8,6 @@
             <v-card class="elevation-12">
               <v-form
               ref="form"
-              v-model="valid"
               lazy-validation>
                 <v-toolbar dark color="primary">
                   <v-toolbar-title>MEDICAL PRESCRIPTION</v-toolbar-title>
@@ -104,7 +103,6 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
-                  :disabled="!valid"
                   color="primary"
                   @click="validate">
                     Validate
@@ -119,12 +117,13 @@
   </v-app>
 </template>
 <script>
+import axios from 'axios';
 export default {
 name: 'Prescription',
 
 data () {
 return {
-  patients: ['pratik','calden','shadrak','rajasi'],
+  patients: [],
 dieases: ['CATARACT','FACTURE'],
         drugs: ['crocin', 'cyclopan', 'combiflam', 'ocaset'],
         doses: ['once','twice','thrice'],
@@ -134,7 +133,20 @@ dieases: ['CATARACT','FACTURE'],
      menu2: false,
 
 }
-}
+},
+created(){
+  axios.post('http://192.168.43.143:8081/prescription', {
+     })
+       .then((res) => {
+         console.log(res.data);
+         this.patients.push(res.data);
+       })
+       .catch((err) =>{
+         console.log(err)
+       })
+},
+
+
 }
 
 
