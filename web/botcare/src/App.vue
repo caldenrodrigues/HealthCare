@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
+      <head>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+</head>
       <router-link to="/">Home</router-link> |
       <router-link to="/prescription">Prescription</router-link>
     </div>
