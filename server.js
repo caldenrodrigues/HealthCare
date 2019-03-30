@@ -3,11 +3,6 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var server = require('http').Server(app);
-<<<<<<< HEAD
-var io = require('socket.io')(server);
-var mongoose = require('mongoose');
-=======
->>>>>>> 6528d227a7e15b5e64155a633fc75560fe994f56
 app.use(cors());
 const axios = require('axios');
 var mysql = require('mysql');
@@ -162,7 +157,7 @@ io.on('connection', function (socket) {
     // socket.on('demo', (data)=>{
     //     console.log(data);
     // });
-    
+
 
     socket.on('disconnect', ()=>{
          console.log('socket disconnected');

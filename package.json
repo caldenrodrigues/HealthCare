@@ -17,11 +17,8 @@
   },
   "homepage": "https://github.com/caldenrodrigues/HealthCare#readme",
   "dependencies": {
-<<<<<<< HEAD
     "body-parser": "^1.18.3",
-=======
     "axios": "^0.16.2",
->>>>>>> 6528d227a7e15b5e64155a633fc75560fe994f56
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "mysql": "^2.16.0",
