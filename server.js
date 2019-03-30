@@ -5,16 +5,25 @@ var cors = require('cors');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 app.use(cors());
+const axios = require('axios');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get("/", (req,res)=>{
-
-
-  return res.send("Welcome to BotCare");
+app.get("/", (req,result)=>{
+  myvar = "What is the name of the doctor"
+  axios.post('http://localhost:5000/train', {
+    myvar
+  })
+  .then((res) => {
+    console.log(res.data);
+    return result.send(res.data);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 });
 
 io.on('connection', function (socket) {
