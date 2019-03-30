@@ -18,5 +18,10 @@ conversations:
 - - What all things you can do?
   - I can remind you about your prescription, appointments and a lot more
 - - What can you do?
-  - I can remind you about your prescription, appointments and a lot more
-
+  - I can remind you about your prescription, appointments and a lot moreip
+- - Tip of my hand is swelling what should I do ?
+  - Apply packs ice over it. Make sure you wrap the ice inside a piece of cloth before applying.
+- - The tip of my hand has turn bluish or blue 
+  - Apply ice packs over it. Make sure you wrap the ice inside a piece of cloth before applying.
+- - When was my last appointment?
+  - last appointment
