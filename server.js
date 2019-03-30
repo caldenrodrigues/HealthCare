@@ -88,7 +88,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-<<<<<<< HEAD
 // app.get('/', (req, res) => {
 //     res.sendFile(__dirname + '/index.html');
 // });
@@ -96,7 +95,6 @@ app.use(bodyParser.urlencoded({
 app.get("/", (req,res)=>{
    return res.send("Welcome to BotCare");
  });
-=======
 app.get("/testQuery", (req,result)=>{
   myvar = "What is the name of the doctor"
   axios.post('http://localhost:5000/testQuery', {
@@ -149,7 +147,6 @@ app.get('/getQuery', (req, result) => {
     console.log(err)
   })
 });
->>>>>>> 6528d227a7e15b5e64155a633fc75560fe994f56
 
 io.on('connection', function (socket) {
     console.log("Socket is connected...");
