@@ -10,11 +10,30 @@ var mongoose = require('mongoose');
 >>>>>>> 6528d227a7e15b5e64155a633fc75560fe994f56
 app.use(cors());
 const axios = require('axios');
+var mysql = require('mysql');
 //Socket
 const io = require("socket.io")(server)
 
+//mysql
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: process.env.database_user,
+    password: process.env.database_password,
+    database: 'CsiManagementSystem'
+});
+
+connection.connect(function(err) {
+    if (!err) {
+        console.log('Connected to MySql!\n');
+    } else {
+        console.log(err);
+    }
+});
+
 io.on('connection', (socket) => {
   console.log('New User')
+  patient_id = '101'
+  console.log(patient_id)
   socket.on('newMessage', (data) => {
     console.log(data)
     myvar = data
@@ -26,7 +45,24 @@ io.on('connection', (socket) => {
       strResponse = res.data;
       strResponse = strResponse.substring(1);
       if(strResponse == "doctor"){
-        //shadrak get data here
+
+        connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+          if (err) throw err;
+          connection.query("Select * from Doctor where d_id = ?",[],function(err, result, fields) {
+            if (err) throw err;
+            doctor_name = result[0].name;
+            doctor_contact = result[0].contact;
+            doctor_spec = result[0].specializtion;
+            var json_response = {}
+            json_response["type"] = "doctor"
+            json_response["name"] = doctor_name
+            json_response["contact"] = doctor_contact
+            json_response["spec"] = doctor_spec
+            console.log(json_response)
+            io.sockets.emit('newResponse',json_response)
+          })
+       });
+
       }
       else if(strResponse == "hospital"){
         //shadrak get data here
@@ -37,7 +73,10 @@ io.on('connection', (socket) => {
       else if(strResponse == "dose"){
         //shadrak get data here
       }
-      io.sockets.emit('newResponse',strResponse)
+      else{
+        io.sockets.emit('newResponse',strResponse)
+      }
+
     })
     .catch((err) => {
       console.log(err)
