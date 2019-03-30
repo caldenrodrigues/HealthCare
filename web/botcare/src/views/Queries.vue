@@ -14,7 +14,6 @@
     </v-app>
     <AddQuery/>
   </div>
-
 </template>
 
 <script>

@@ -14,15 +14,14 @@
                 </v-toolbar>
                 <v-card-text>
                     <v-text-field
-
-                                           <v-flex xs12 sm6 d-flex>
-                                    <v-select
-                                      :items="patients"
-                                      label="PATIENT"
-                                       v-model="patient"
-                                        type="text"
-                                    ></v-select>
-                                  </v-flex>
+                      <v-flex xs12 sm6 d-flex>
+                        <v-select
+                          :items="patients"
+                          label="PATIENT"
+                           v-model="patient"
+                            type="text"
+                        ></v-select>
+                      </v-flex>
 
 
                     <v-flex xs6>
@@ -149,6 +148,12 @@ name: 'Prescription',
 data () {
 return {
   id: "",
+  patient: "",
+  select: "",
+  drug: "",
+  unit: "",
+  dose: "",
+  precaution: "",
   patients: [],
 dieases: ['CATARACT','FACTURE'],
         drugs: ['crocin', 'cyclopan', 'combiflam', 'ocaset'],
@@ -172,11 +177,9 @@ methods: {
     const DOSE =this.dose;
     const DATE=this.date;
     const PRECAUTION=this.precaution;
-    axios.post('http://192.168.43.143:8081/prescriptionSubmit', {
-        PATIENT  ,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
-
+    axios.post('http://localhost:8081/prescriptionSubmit', {
+        PATIENT,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
         })
-
         .then((res) => {
           this.text = "Successfull";
         })
@@ -185,19 +188,10 @@ methods: {
         });
         this.snackbar=true;
 
-
-
-
-
-
-
-
-
-
   }
 },
 created(){
-  axios.post('http://192.168.43.143:8081/prescription', {
+  axios.post('http://localhost:8081/prescription', {
      })
        .then((res) => {
          console.log(res.data);
@@ -211,25 +205,7 @@ created(){
 
 
 }
-
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <style lang="css" scoped>
 
