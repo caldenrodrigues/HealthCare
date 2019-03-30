@@ -1,6 +1,6 @@
 <div align="center">
 
-![Health Care](https://imgur.com/cRFAecF.png)
+<p align="center"><h1>BotCare</h1></p>
 
 [![Hackathon](https://img.shields.io/badge/hackathon-Unscript-orange.svg)](http://unscript2k19.me/) 
 [![Status](https://img.shields.io/badge/status-active-green.svg)]() 
