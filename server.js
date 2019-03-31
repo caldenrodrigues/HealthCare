@@ -16,10 +16,10 @@ const io = require("socket.io")(server)
 //mysql
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: process.env.database_user,
-    password: process.env.database_password,
-    //user: 'root',
-    //password: 'shadrak',
+    // user: process.env.database_user,
+    // password: process.env.database_password,
+    user: 'root',
+    password: 'shadrak',
     database: 'Healthcare'
 });
 
@@ -48,18 +48,10 @@ io.on('connection', (socket) => {
         strResponse = strResponse.substring(2);
       }
       else{
-        const queryQuestion = myvar
-        axios.post('http://localhost:5000/nplQuery', {
-          queryQuestion
-        })
-        .then((res) => {
-          return 
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-        connection.query("Insert into pendings values(?,?,?)",[patient_id, myvar, ""], function (err, result, fields) {
+        question_id = random.integer(501,700);
+        connection.query("Insert into pendings values(?,?,?,?)",[patient_id, question_id, myvar, ""], function (err, result, fields) {
           if (err) throw err;
+          console.log(question_id);
         });
       }
       console.log(strResponse)
@@ -128,9 +120,6 @@ io.on('connection', (socket) => {
           io.sockets.emit('newDose',json_response)
         });
       }
-      else if(strResponse == "reshedule"){
-        io.sockets.emit("changeAppointment")
-      }
       else{
         io.sockets.emit('newRegular',strResponse)
       }
@@ -139,17 +128,6 @@ io.on('connection', (socket) => {
     .catch((err) => {
       console.log(err)
     })
-  })
-  socket.on("changedAppointment", (data) => {
-    p_id = "101"
-    app_date = data
-    connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
-      if (err) throw err;
-      return res.send("Success")
-    });
-  });
-  socket.on("forgotMeds", (data) => {
-    io.sockets.emit('newRegular',"Missing your medication too frequently is not advicable")
   })
 })
 
@@ -197,6 +175,33 @@ app.get("/", (req,res)=>{
    return res.send("Welcome to BotCare");
 });
 
+app.get("/testQuery", (req,result)=>{
+  myvar = "What is the name of the doctor"
+  axios.post('http://localhost:5000/testQuery', {
+    myvar
+  })
+  .then((res) => {
+    strResponse = res.data;
+    strResponse = strResponse.substring(1);
+    if(strResponse == "doctor"){
+      //shadrak get data here
+    }
+    else if(strResponse == "hospital"){
+      //shadrak get data here
+    }
+    else if(strResponse == "appointment"){
+      //shadrak get data here
+    }
+    else if(strResponse == "dose"){
+      //shadrak get data here
+    }
+    return result.send(strResponse);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+});
+
 app.post('/addQuery', (req, result) => {
   queryQuestion = req.body.ques
   queryAnswer = req.body.ans
@@ -226,17 +231,17 @@ app.post('/prescription', (req, res) => {
 
 });
 
-app.post('/prescriptionSubmit', (req, res) => {
+app.post('/prescriptionSubmit', (req, res) => { //Enters prescription details into Database
     prescription_id = random.integer(301, 400);
     console.log(prescription_id);
-    patient_id = "101"
+    patient_id = req.body.p_id
     diagnose = req.body.SELECT;
     name = req.body.PATIENT;
     age = req.body.age;
     drug = req.body.DRUG;
     unit = req.body.UNIT;
     dose = req.body.DOSE;
-    app_date = req.body.DATE;
+    app_date = req.body.DATE; 
     date = new Date();
     precaution = req.body.PRECAUTION;
     doctor_id = '201';
@@ -244,18 +249,7 @@ app.post('/prescriptionSubmit', (req, res) => {
     connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
         if(err) throw err;
         console.log("data inserted");
-        io.sockets.emit('newRegular',"Thank you for visiting the doctor, here is the details for your next appointment")
-        connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
-          if(err) throw err;
-          doctor_name = result[0].name;
-          var json_response = {}
-          json_response["type"] = "appointment";
-          json_response["name"] = doctor_name;
-          json_response["date"] = app_date;
-          console.log(json_response)
-          io.sockets.emit('newAppointment',json_response)
-          return res.send("Success")
-        });
+        return res.send("Success")
     });
 });
 
@@ -271,25 +265,31 @@ app.post('/getQuery', (req, result) => {
   })
 });
 
-app.get('/getPendings', (req, result) => {
+app.post('/getPendings', (req, result) => { //Sends list of all pending queries
+  console.log("getPendings loaded!");
   connection.query('select * from pendings where p_id=101', function(err, res, fields){
     if (err) throw err;
     json_response = []
     for(i=0;i<res.length;i++){
       json_object = {}
-      json_object["id"] = res[i].p_id
+      json_object["patient_id"] = res[i].p_id
       json_object["question"] = res[i].question
+      json_object["question_id"] = res[i].q_id
       json_response.push(json_object)
     }
+    console.log(json_response)
     return result.send(json_response)
   });
 });
 
-app.post('/updateAppointment', (req, res) => {
-  p_id = "101"
-  app_date = req.body.app_date
-  connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
-    if (err) throw err;
+app.get('/getAnswers', (req, res) => { //Retrieve answers from hospital portal for pending queries
+  console.log("getAnswers loaded");
+  answer = req.body.answer;
+  question_id = req.body.q_id;
+  person_id = req.body.p_id;
+  connection.query('update pendings set answer=? where q_id=? and p_id',[answer, question_id, person_id],function(err, result, fields){
+    if(err) throw error;
+    console.log("Answers filled");
     return res.send("Success")
   });
 });
