@@ -15,14 +15,14 @@
                 <v-card-text>
                     <v-text-field
 
-                                           <v-flex xs12 sm6 d-flex>
-                                    <v-select
-                                      :items="patients"
-                                      label="PATIENT"
-                                       v-model="patient"
-                                        type="text"
-                                    ></v-select>
-                                  </v-flex>
+                    <v-flex xs12 sm6 d-flex>
+                      <v-select
+                        :items="patients"
+                        label="PATIENT"
+                         v-model="patient"
+                          type="text"
+                          ></v-select>
+                        </v-flex>
 
 
                     <v-flex xs6>
@@ -69,6 +69,29 @@
 
  </v-layout>
     </v-container>
+    <v-flex xs12 sm4 md4>
+              <v-checkbox
+                v-model="ex4"
+                label="Breakfast"
+                color="red darken-3"
+                value="red darken-3"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="ex4"
+                label="Lunch"
+                color="red darken-3"
+                value="red darken-3"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="ex4"
+                label="Dinner"
+                color="red darken-3"
+                value="red darken-3"
+                hide-details
+              ></v-checkbox>
+            </v-flex>
     <v-flex xs12 sm6>
      <v-menu
        ref="menu"
@@ -82,6 +105,7 @@
        full-width
        min-width="290px"
      >
+
        <template v-slot:activator="{ on }">
          <v-text-field
            v-model="date"
@@ -153,6 +177,8 @@ return {
 dieases: ['CATARACT','FACTURE'],
         drugs: ['crocin', 'cyclopan', 'combiflam', 'ocaset'],
         doses: ['once','twice','thrice'],
+        checkbox1: true,
+     checkbox2: false,
         date: new Date().toISOString().substr(0, 10),
      menu: false,
      modal: false,

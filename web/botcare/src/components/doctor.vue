@@ -19,6 +19,9 @@
                         :items="questions"
                         label="QUESTION"
                          v-model="question"
+                         item-text="question"
+                         single-line
+                         return-object
                           type="text"
                       ></v-select>
                     </v-flex>
@@ -76,6 +79,7 @@ v-model="snackbar"
 
 
 <script>
+import axios from 'axios';
 export default {
 name: 'Doctor',
 
@@ -91,7 +95,7 @@ methods: {
     console.log("IN")
     const ANSWER=this.answer;
 
-    axios.post('http://192.168.43.143:8081/prescriptionSubmit', {
+    axios.get('http://192.168.43.143:8081/getAnswers', {
       ANSWER
 
         })
@@ -99,7 +103,7 @@ methods: {
         .then((res) => {
           this.text = "Successfully answered";
         })
-        .catch((error) => {
+        .catch((err) => {
           this.text = "Unsuccessfull";
         });
         this.snackbar=true;
@@ -107,12 +111,12 @@ methods: {
   }
 },
 created(){
-  axios.post('http://192.168.43.143:8081/prescription', {
+  axios.post('http://192.168.43.143:8081/getPendings', {
      })
        .then((res) => {
          console.log(res.data);
-         this.id = res.data.id;
-         this.answers.push(res.data.name);
+         this.questions = res.data;
+         console.log(this.questions);
        })
        .catch((err) =>{
          console.log(err)
