@@ -11,9 +11,10 @@
 </div>
 
 ---
-# Flow Diagram
 
 <p align="center">Health care for patients post surgery</p>
+
+# Flow Diagram
 
 ![LegoDoc](https://i.imgur.com/1zWLwaz.png)
 
