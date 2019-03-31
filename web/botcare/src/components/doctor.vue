@@ -17,7 +17,7 @@
                         :items="questions"
                         label="QUESTION"
                          v-model="question"
-                         item-text="question"
+                         item-text="questions"
                          single-line
                          return-object
                           type="text"
@@ -84,6 +84,8 @@ name: 'Doctor',
 data () {
 return {
     questions: [],
+    question: "",
+      answer: "",
   snackbar:false,
   text: ' '
 }
@@ -92,10 +94,13 @@ methods: {
   submit() {
     console.log("IN")
     const ANSWER=this.answer;
-
-    axios.get('http://192.168.43.143:8081/getAnswers', {
-      ANSWER
-
+    const q_id=this.question.question_id
+    const p_id=this.question.patient_id
+    console.log(this.question)
+    axios.post('http://192.168.43.143:8081/getAnswers', {
+      ANSWER,
+      q_id,
+      p_id,
         })
 
         .then((res) => {
