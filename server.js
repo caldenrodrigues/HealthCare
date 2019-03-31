@@ -16,10 +16,10 @@ const io = require("socket.io")(server)
 //mysql
 const connection = mysql.createConnection({
     host: 'localhost',
-    // user: process.env.database_user,
-    // password: process.env.database_password,
-    user: 'root',
-    password: 'shadrak',
+    user: process.env.database_user,
+    password: process.env.database_password,
+    // user: 'root',
+    // password: 'shadrak',
     database: 'Healthcare'
 });
 
@@ -273,7 +273,7 @@ app.post('/getPendings', (req, result) => { //Sends list of all pending queries
     for(i=0;i<res.length;i++){
       json_object = {}
       json_object["patient_id"] = res[i].p_id
-      json_object["question"] = res[i].question
+      json_object["questions"] = res[i].question
       json_object["question_id"] = res[i].q_id
       json_response.push(json_object)
     }
@@ -282,14 +282,16 @@ app.post('/getPendings', (req, result) => { //Sends list of all pending queries
   });
 });
 
-app.get('/getAnswers', (req, res) => { //Retrieve answers from hospital portal for pending queries
-  console.log("getAnswers loaded");
-  answer = req.body.answer;
+app.post('/getAnswers', (req, res) => { //Retrieve answers from hospital portal for pending queries
+  console.log(req.body);
+  answer = req.body.ANSWER;
   question_id = req.body.q_id;
   person_id = req.body.p_id;
-  connection.query('update pendings set answer=? where q_id=? and p_id',[answer, question_id, person_id],function(err, result, fields){
+  console.log(req.body);
+  connection.query('update pendings set answer=? where q_id=? and p_id=?',[answer, question_id, person_id],function(err, result, fields){
     if(err) throw error;
     console.log("Answers filled");
+    console.log(result);
     return res.send("Success")
   });
 });
