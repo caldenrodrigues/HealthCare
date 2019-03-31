@@ -15,7 +15,7 @@
 
 <p align="center">Health care for patients post surgery</p>
 
-![LegoDoc](https://i.imgur.com/kibi2Pf.png)
+![LegoDoc](https://i.imgur.com/1zWLwaz.png)
 
 # Table of Content
 + [About](#description)
