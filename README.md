@@ -11,6 +11,7 @@
 </div>
 
 ---
+# Flow Diagram
 
 <p align="center">Health care for patients post surgery</p>
 
@@ -26,7 +27,10 @@
 + [Authors](#authors)
 
 ## About<a name="description"></a>
-
+- A Chatbot that can answer varying levels of queries from the user, these queries range from simple information to booking of appointment for the doctor.
+- One can get details about his past doctors, prescriptions, dosage etc, just by quering the bot.
+- Questions can even be asked to the doctors directly.
+- Reminders can be set for taking medicines.
 
 ## Getting Started<a name="getting_started"></a>
 
@@ -44,6 +48,10 @@ Installing VueJs
 ```
 $ npm install -g @vue/cli
 ```
+Installing Python3
+```
+$ sudo apt-get install python3
+```
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
@@ -56,7 +64,9 @@ Installing the dependencies
 ```
 $ cd HealthCare
 $ npm install
-$ cd web/lego/
+$ cd Python
+$ pip install -r requiremnt.txt
+$ cd ../web/bootcare/
 $ npm install
 ```
 If you are running a development environment, use the following command:
@@ -68,9 +78,14 @@ If you are running a deployment environment, use the following command:
 $ npm run build
 ```
 
-Running the server
+Running the node server
 ```
 $ node server.js
+```
+
+Running the flask server
+```
+$ python chatbot.py
 ```
 The application will now be running on https://localhost:8080/
 
@@ -79,17 +94,20 @@ The application will now be running on https://localhost:8080/
 + [Express](https://expressjs.com/) - Server Framework
 + [VueJs](https://vuejs.org/) - Web Framework
 + [NodeJs](https://nodejs.org/en/) - Server Environment
++ [Android Studio](https://developer.android.com/studio) - Android App
++ [Flask](http://flask.pocoo.org/) - Python server, serving the models
 
 ## Limitations<a name="limitations"></a>
-
++ The only way to detect distress is using the conversations with the bot
 
 ## Future Scope<a name="future_scope"></a>
-
++ Integration with Google Fit
 
 ## File Structure <a name="file_structure"></a>
 /server.js  : Main server code <br>
 /web/lego  : Website code <br>
 /models     : Data structures and methods to access them <br>
+/Python     : Flask app and dependencies for the model
 
 ## Contributing<a name="contributing"></a>
 
