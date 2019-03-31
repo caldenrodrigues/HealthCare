@@ -173,6 +173,12 @@ name: 'Prescription',
 data () {
 return {
   id: "",
+  patient: "",
+  select: "",
+  drug: "",
+  unit: "",
+  dose: "",
+  precaution: "",
   patients: [],
 dieases: ['CATARACT','FACTURE'],
         drugs: ['crocin', 'cyclopan', 'combiflam', 'ocaset'],
@@ -198,11 +204,9 @@ methods: {
     const DOSE =this.dose;
     const DATE=this.date;
     const PRECAUTION=this.precaution;
-    axios.post('http://192.168.43.143:8081/prescriptionSubmit', {
-        PATIENT  ,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
-
+    axios.post('http://localhost:8081/prescriptionSubmit', {
+        PATIENT,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
         })
-
         .then((res) => {
           this.text = "Successfull";
         })
@@ -211,24 +215,16 @@ methods: {
         });
         this.snackbar=true;
 
-
-
-
-
-
-
-
-
-
   }
 },
 created(){
-  axios.post('http://192.168.43.143:8081/prescription', {
+  axios.post('http://localhost:8081/prescription', {
      })
        .then((res) => {
          console.log(res.data);
          this.id = res.data.id;
-         this.patients.push(res.data.name);
+         var str_name = this.id + " - " + res.data.name
+         this.patients.push(str_name);
        })
        .catch((err) =>{
          console.log(err)
@@ -237,25 +233,7 @@ created(){
 
 
 }
-
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <style lang="css" scoped>
 

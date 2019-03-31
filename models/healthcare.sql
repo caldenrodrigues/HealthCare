@@ -93,7 +93,33 @@ CREATE TABLE `Prescription` (
 
 LOCK TABLES `Prescription` WRITE;
 /*!40000 ALTER TABLE `Prescription` DISABLE KEYS */;
+INSERT INTO `Prescription` VALUES (301,101,'2019-03-30','2019-03-30','fracture','crocin','5mg','3',201,'Do not move much'),(354,NULL,'2019-03-31','2019-03-31','FACTURE','crocin','10mg','thrice',201,'Sleep well');
 /*!40000 ALTER TABLE `Prescription` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pendings`
+--
+
+DROP TABLE IF EXISTS `pendings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pendings` (
+  `p_id` int(11) DEFAULT NULL,
+  `q_id` int(11) DEFAULT NULL,
+  `question` varchar(30) DEFAULT NULL,
+  `answer` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pendings`
+--
+
+LOCK TABLES `pendings` WRITE;
+/*!40000 ALTER TABLE `pendings` DISABLE KEYS */;
+INSERT INTO `pendings` VALUES (101,501,'I am not feeling well',''),(101,502,'My hand is paining','');
+/*!40000 ALTER TABLE `pendings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -105,4 +131,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-30 18:05:55
+-- Dump completed on 2019-03-31  7:10:03

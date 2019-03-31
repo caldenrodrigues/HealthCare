@@ -1,15 +1,15 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var cors = require('cors');
 var server = require('http').Server(app);
 //var generator = require('generate-password');
 //var random = require('random-number');
 var {Random} = require('random-js');
 var random = new Random();
-app.use(cors());
 const axios = require('axios');
 var mysql = require('mysql');
+var cors = require('cors');
+app.use(cors());
 //Socket
 const io = require("socket.io")(server)
 
@@ -47,9 +47,15 @@ io.on('connection', (socket) => {
       if(strResponse.substring(0,3) != "I a"){
         strResponse = strResponse.substring(2);
       }
+      else{
+        question_id = random.integer(501,700);
+        connection.query("Insert into pendings values(?,?,?,?)",[patient_id, question_id, myvar, ""], function (err, result, fields) {
+          if (err) throw err;
+          console.log(question_id);
+        });
+      }
       console.log(strResponse)
       if(strResponse == "doctor"){
-
         connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
           if (err) throw err;
           doctor_id = result[0].d_id;
@@ -104,8 +110,11 @@ io.on('connection', (socket) => {
           else if(current_hour<13){
               json_response["time"] = "1:00pm";
           }
-          else{
+          else if(current_hour<21){
             json_response["time"] = "9:00pm";
+          }
+          else{
+            json_response["time"] = "9:00am";
           }
           console.log(json_response)
           io.sockets.emit('newDose',json_response)
@@ -123,10 +132,40 @@ io.on('connection', (socket) => {
 })
 
 
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+app.get('/testSocket', function(req, res) {
+  connection.query("SELECT * FROM Prescription where p_id = 101", function (err, result, fields) {
+    if (err) throw err;
+    var json_response = {}
+    json_response["drug"] = result[0].drugs;
+    json_response["unit"] = result[0].unit;
+    var date = new Date();
+    var current_hour = date.getHours();
+    if(current_hour<9){
+      json_response["time"] = "9:00am";
+    }
+    else if(current_hour<13){
+        json_response["time"] = "1:00pm";
+    }
+    else if(current_hour<21){
+      json_response["time"] = "9:00pm";
+    }
+    else{
+      json_response["time"] = "9:00am";
+    }
+    console.log(json_response)
+    string_response = "Hey, Don't forget to take your " + json_response["unit"] + " of " + json_response["drug"] + " at " + json_response["time"];
+    io.sockets.emit('newAlert',string_response)
+    io.sockets.emit('newDose',json_response)
+  });
+  return res.send("Request Sent")
+})
 
 // app.get('/', (req, res) => {
 //     res.sendFile(__dirname + '/index.html');
@@ -192,14 +231,9 @@ app.post('/prescription', (req, res) => {
 
 });
 
-app.post('/prescriptionSubmit', (req, res) => {
-
+app.post('/prescriptionSubmit', (req, res) => { //Enters prescription details into Database
     prescription_id = random.integer(301, 400);
     console.log(prescription_id);
-    // prescription_id = generator.generate({
-    //     length: 3,
-    //     numbers: true
-    // });;
     patient_id = req.body.p_id
     diagnose = req.body.SELECT;
     name = req.body.PATIENT;
@@ -207,7 +241,7 @@ app.post('/prescriptionSubmit', (req, res) => {
     drug = req.body.DRUG;
     unit = req.body.UNIT;
     dose = req.body.DOSE;
-    app_date = req.body.DATE;
+    app_date = req.body.DATE; 
     date = new Date();
     precaution = req.body.PRECAUTION;
     doctor_id = '201';
@@ -219,7 +253,8 @@ app.post('/prescriptionSubmit', (req, res) => {
     });
 });
 
-app.get('/getQuery', (req, result) => {
+app.post('/getQuery', (req, result) => {
+  console.log("IND")
   axios.post('http://localhost:5000/getQuery', {
   })
   .then((res) => {
@@ -230,17 +265,33 @@ app.get('/getQuery', (req, result) => {
   })
 });
 
-io.on('connection', function (socket) {
-    console.log("Socket is connected...");
-    // socket.emit('start', {hello: 'user'});
-    // socket.on('demo', (data)=>{
-    //     console.log(data);
-    // });
+app.post('/getPendings', (req, result) => { //Sends list of all pending queries
+  console.log("getPendings loaded!");
+  connection.query('select * from pendings where p_id=101', function(err, res, fields){
+    if (err) throw err;
+    json_response = []
+    for(i=0;i<res.length;i++){
+      json_object = {}
+      json_object["patient_id"] = res[i].p_id
+      json_object["question"] = res[i].question
+      json_object["question_id"] = res[i].q_id
+      json_response.push(json_object)
+    }
+    console.log(json_response)
+    return result.send(json_response)
+  });
+});
 
-
-    socket.on('disconnect', ()=>{
-         console.log('socket disconnected');
-    });
+app.get('/getAnswers', (req, res) => { //Retrieve answers from hospital portal for pending queries
+  console.log("getAnswers loaded");
+  answer = req.body.answer;
+  question_id = req.body.q_id;
+  person_id = req.body.p_id;
+  connection.query('update pendings set answer=? where q_id=? and p_id',[answer, question_id, person_id],function(err, result, fields){
+    if(err) throw error;
+    console.log("Answers filled");
+    return res.send("Success")
+  });
 });
 
 //port activation

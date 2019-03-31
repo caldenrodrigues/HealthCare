@@ -1,0 +1,21 @@
+categories:
+- Child delivery
+conversations:
+- - Hi
+  - I am Chatbot. How can I help you?
+- - What is the name of the Doctor?
+  - doctor
+- - What is the name of the Hospital?
+  - hospital
+- - When is my next appointment?
+  - appointment
+- - When is my next dose?
+  - dose
+- - I feel very tired 
+  - After delivery your body becomes very weak you need to take nap frequently and take rest as much as you can.
+- - Tips for Nutrition
+  - Supplement your diet with grains, vegetables, dairy, fruits, protein legumes and cereals. Your food palate must be rich in protein, iron and calcium.
+- - Tips for exercise
+  - Find sometime to exercise and establis a regime. Get out of your house and try to walk to strengthen your muscles.
+- - Paining near the stitches
+  - Continue with your regular ointment near the stitches and limit the stress near stitches.

@@ -80,9 +80,11 @@ export default {
       })
         .then((res) => {
           console.log("Success");
+          this.dialog = false;
         })
         .catch((err) => {
           console.log(err);
+          this.dialog = false;
         });
     }
   }
