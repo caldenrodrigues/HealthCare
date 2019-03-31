@@ -106,6 +106,7 @@ DROP TABLE IF EXISTS `pendings`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pendings` (
   `p_id` int(11) DEFAULT NULL,
+  `q_id` int(11) DEFAULT NULL,
   `question` varchar(30) DEFAULT NULL,
   `answer` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -117,7 +118,7 @@ CREATE TABLE `pendings` (
 
 LOCK TABLES `pendings` WRITE;
 /*!40000 ALTER TABLE `pendings` DISABLE KEYS */;
-INSERT INTO `pendings` VALUES (101,'Hi',''),(101,'Hey',''),(101,'Hi',''),(101,'Hey',''),(101,'Hello',''),(101,'Hey',''),(101,'Who',''),(101,'Hey',''),(101,'Ok',''),(101,'Why',''),(101,'I am not feeling well',''),(101,'My hand is paining',''),(101,'My hand is paining what to do',''),(101,'My hand is paining',''),(101,'My hand is hurting',''),(101,'My hand is hurting','');
+INSERT INTO `pendings` VALUES (101,501,'I am not feeling well',''),(101,502,'My hand is paining','');
 /*!40000 ALTER TABLE `pendings` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -130,4 +131,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-31  5:08:56
+-- Dump completed on 2019-03-31  7:10:03
