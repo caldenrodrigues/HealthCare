@@ -26,11 +26,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def get_response():
 	usrText = request.get_json()["myvar"]
 	bot = ChatBot('Bot',
+	storage_adapter="chatterbot.storage.SQLStorageAdapter",
 	logic_adapters=[
 	    {
 	        'import_path': 'chatterbot.logic.BestMatch',
 	        'default_response': 'I am sorry, but I do not understand.',
-	        'maximum_similarity_threshold': 0.90
+	        'maximum_similarity_threshold': 0.75
 	    }
 	])
 	trainer = ListTrainer(bot)
@@ -84,6 +85,7 @@ GREETING_RESPONSES = ["hi", "hey", "*nods*", "hi there", "hello", "I am glad! Yo
 @app.route('/nlpQuery', methods = ['POST','GET'])
 def nlpQuery():
 	user_response = request.get_json()["queryQuestion"]
+	#user_response = "how to increase bone strength"
 	user_response=user_response.lower()
 	if(user_response!='bye'):
 		if(user_response=='thanks' or user_response=='thank you' ):

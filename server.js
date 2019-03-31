@@ -33,7 +33,9 @@ connection.connect(function(err) {
 
 io.on('connection', (socket) => {
   console.log('New User')
+  flag = false
   patient_id = '101'
+  //io.sockets.emit("changeAppointment")
   console.log(patient_id)
   socket.on('newMessage', (data) => {
     console.log(data)
@@ -42,12 +44,88 @@ io.on('connection', (socket) => {
       myvar
     })
     .then((res) => {
-
       strResponse = res.data;
       if(strResponse.substring(0,3) != "I a"){
         strResponse = strResponse.substring(2);
+        if(strResponse == "doctor"){
+          connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+            if (err) throw err;
+            doctor_id = result[0].d_id;
+            connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+              if (err) throw err;
+              doctor_name = result[0].name;
+              doctor_contact = result[0].contact;
+              doctor_spec = result[0].specialization;
+              var json_response = {}
+              json_response["type"] = "doctor"
+              json_response["name"] = doctor_name
+              json_response["contact"] = doctor_contact
+              json_response["spec"] = doctor_spec
+              console.log(json_response)
+              io.sockets.emit('newDoctor',json_response)
+            })
+         });
+
+        }
+        else if(strResponse == "hospital"){
+          io.sockets.emit('newRegular',strResponse)
+        }
+        else if(strResponse == "appointment"){
+
+          connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+            if (err) throw err;
+            appointment_date = result[0].app_date;
+            doctor_id = result[0].d_id;
+            connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+              doctor_name = result[0].name;
+              var json_response = {}
+              json_response["type"] = "appointment";
+              json_response["name"] = doctor_name;
+              json_response["date"] = appointment_date;
+              console.log(json_response)
+              io.sockets.emit('newAppointment',json_response)
+            });
+          });
+
+        }
+        else if(strResponse == "dose"){
+          connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+            if (err) throw err;
+            var json_response = {}
+            json_response["drug"] = result[0].drugs;
+            json_response["unit"] = result[0].unit;
+            var date = new Date();
+            var current_hour = date.getHours();
+            if(current_hour<9){
+              json_response["time"] = "9:00am";
+            }
+            else if(current_hour<13){
+                json_response["time"] = "1:00pm";
+            }
+            else if(current_hour<21){
+              json_response["time"] = "9:00pm";
+            }
+            else{
+              json_response["time"] = "9:00am";
+            }
+            console.log(json_response)
+            io.sockets.emit('newDose',json_response)
+          });
+        }
+        else if(strResponse == "reschedule"){
+          console.log("In")
+          io.sockets.emit("changeAppointment")
+        }
+        else if(strResponse == "reshedule"){
+          console.log("In")
+          io.sockets.emit("changeAppointment")
+        }
+        else{
+          io.sockets.emit('newRegular',strResponse)
+        }
       }
       else{
+<<<<<<< dc2be18b17f84698fd76c55cc180b96c582c5682
         question_id = random.integer(501,700);
         connection.query("Insert into pendings values(?,?,?,?)",[patient_id, question_id, myvar, ""], function (err, result, fields) {
           if (err) throw err;
@@ -122,13 +200,60 @@ io.on('connection', (socket) => {
       }
       else{
         io.sockets.emit('newRegular',strResponse)
+=======
+        const queryQuestion = myvar
+        axios.post('http://localhost:5000/nlpQuery', {
+          queryQuestion
+        })
+        .then((res) => {
+          console.log(res.data)
+          strResponse = res.data
+          io.sockets.emit('newRegular',strResponse)
+          if(strResponse.substring(0,3) == "I a"){
+            connection.query("Insert into pendings values(?,?,?)",[patient_id, myvar, ""], function (err, result, fields) {
+              if (err) throw err;
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+>>>>>>> Changes in socket
       }
-
     })
     .catch((err) => {
       console.log(err)
     })
   })
+<<<<<<< dc2be18b17f84698fd76c55cc180b96c582c5682
+=======
+  socket.on("changedAppointment", (data) => {
+    p_id = "101"
+    app_date = data
+    connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
+      if (err) throw err;
+      connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+        if (err) throw err;
+        appointment_date = result[0].app_date;
+        doctor_id = result[0].d_id;
+        connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+          doctor_name = result[0].name;
+          var json_response = {}
+          json_response["type"] = "appointment";
+          json_response["name"] = doctor_name;
+          json_response["date"] = appointment_date;
+          console.log(json_response)
+          io.sockets.emit('newRegular',"Your appointment has been rescheduled as follows")
+          io.sockets.emit('newAppointment',json_response)
+        });
+      });
+    });
+  });
+  socket.on("forgotMeds", (data) => {
+    console.log(data)
+    io.sockets.emit('newRegular',"Missing your medication too frequently is not advicable")
+  })
+>>>>>>> Changes in socket
 })
 
 
@@ -246,10 +371,29 @@ app.post('/prescriptionSubmit', (req, res) => { //Enters prescription details in
     precaution = req.body.PRECAUTION;
     doctor_id = '201';
     console.log('data received from prescription after submit.');
-    connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
+    connection.query('delete from Prescription where p_id=101', function(err, result, fields){
         if(err) throw err;
+<<<<<<< dc2be18b17f84698fd76c55cc180b96c582c5682
         console.log("data inserted");
         return res.send("Success")
+=======
+        connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
+          if(err) throw err;
+          console.log("data inserted");
+          io.sockets.emit('newRegular',"Thank you for visiting the doctor, here is the details for your next appointment")
+          connection.query("Select * from Doctor where d_id = ?",[doctor_id],function(err, result, fields) {
+            if(err) throw err;
+            doctor_name = result[0].name;
+            var json_response = {}
+            json_response["type"] = "appointment";
+            json_response["name"] = doctor_name;
+            json_response["date"] = app_date;
+            console.log(json_response)
+            io.sockets.emit('newAppointment',json_response)
+            return res.send("Success")
+          });
+        });
+>>>>>>> Changes in socket
     });
 });
 
