@@ -115,7 +115,7 @@ methods: {
   }
 },
 created(){
-  axios.post(`${ip}1/getPendings`, {
+  axios.post(`${ip}/getPendings`, {
      })
        .then((res) => {
          console.log(res.data);
