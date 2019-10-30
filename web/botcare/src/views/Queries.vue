@@ -18,6 +18,7 @@
 
 <script>
 import axios from 'axios';
+var {ip} = require('../IP.js')
 import AddQuery from '../components/AddQuery.vue'
 export default {
   name: 'Queries',
@@ -34,7 +35,8 @@ export default {
     }
   },
   mounted() {
-    axios.post('http://localhost:8081/getQuery', {
+    console.log(ip)
+    axios.post(`${ip}/getQuery`, {
     })
     .then((res) => {
       var i

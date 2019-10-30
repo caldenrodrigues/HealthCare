@@ -78,6 +78,7 @@ v-model="snackbar"
 
 <script>
 import axios from 'axios';
+var {ip} = require('../IP.js')
 export default {
 name: 'Doctor',
 
@@ -97,7 +98,7 @@ methods: {
     const q_id=this.question.question_id
     const p_id=this.question.patient_id
     console.log(this.question)
-    axios.post('http://192.168.43.24:8081/getAnswers', {
+    axios.post(`${ip}/getAnswers`, {
       ANSWER,
       q_id,
       p_id,

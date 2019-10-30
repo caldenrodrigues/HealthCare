@@ -167,6 +167,7 @@
 </template>
 <script>
 import axios from 'axios';
+var {ip} = require('../IP.js')
 export default {
 name: 'Prescription',
 
@@ -204,7 +205,7 @@ methods: {
     const DOSE =this.dose;
     const DATE=this.date;
     const PRECAUTION=this.precaution;
-    axios.post('http://localhost:8081/prescriptionSubmit', {
+    axios.post(`${ip}/prescriptionSubmit`, {
         ID,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
         })
         .then((res) => {
@@ -218,7 +219,7 @@ methods: {
   }
 },
 created(){
-  axios.post('http://localhost:8081/prescription', {
+  axios.post(`${ip}/prescription`, {
      })
        .then((res) => {
          console.log(res.data);

@@ -62,6 +62,7 @@
 
 <script>
 import axios from 'axios';
+var {ip} = require('../IP.js')
 export default {
   data() {
     return {
@@ -74,7 +75,7 @@ export default {
     submit() {
       const ques = this.question;
       const ans = this.answer;
-      axios.post('http://localhost:8081/addQuery', {
+      axios.post(`${ip}/addQuery`, {
         ques,
         ans
       })
