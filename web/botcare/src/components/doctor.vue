@@ -97,7 +97,7 @@ methods: {
     const q_id=this.question.question_id
     const p_id=this.question.patient_id
     console.log(this.question)
-    axios.post('http://192.168.43.143:8081/getAnswers', {
+    axios.post('http://192.168.43.24:8081/getAnswers', {
       ANSWER,
       q_id,
       p_id,
@@ -114,7 +114,7 @@ methods: {
   }
 },
 created(){
-  axios.post('http://192.168.43.143:8081/getPendings', {
+  axios.post('http://192.168.43.24:8081/getPendings', {
      })
        .then((res) => {
          console.log(res.data);

@@ -17,10 +17,10 @@
 
                     <v-flex xs12 sm6 d-flex>
                       <v-select
-                        :items="patients"
+                        :items="patient"
                         label="PATIENT"
-                         v-model="patient"
-                          type="text"
+                        type="text"
+                        v-model = "selectedPatient"
                           ></v-select>
                         </v-flex>
 
@@ -172,8 +172,8 @@ name: 'Prescription',
 
 data () {
 return {
-  id: "",
-  patient: "",
+  selectedPatient: "",
+  patient: [],
   select: "",
   drug: "",
   unit: "",
@@ -196,8 +196,8 @@ dieases: ['CATARACT','FACTURE'],
 },
 methods: {
   submit() {
-    console.log("IN")
-    const PATIENT=this.patient;
+    //console.log(this.selectedPatient.split(" - ")[0])
+    const ID = this.selectedPatient.split(" - ")[0]
     const SELECT =this.select;
     const DRUG=this.drug;
     const UNIT =this.unit;
@@ -205,7 +205,7 @@ methods: {
     const DATE=this.date;
     const PRECAUTION=this.precaution;
     axios.post('http://localhost:8081/prescriptionSubmit', {
-        PATIENT,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
+        ID,SELECT,DRUG,UNIT,DOSE,DATE,PRECAUTION
         })
         .then((res) => {
           this.text = "Successfull";
@@ -222,9 +222,9 @@ created(){
      })
        .then((res) => {
          console.log(res.data);
-         this.id = res.data.id;
-         var str_name = this.id + " - " + res.data.name
-         this.patients.push(str_name);
+         for(var i = 0; i < res.data.length;i++){
+           this.patient.push(res.data[i].p_id + " - " + res.data[i].name)
+         }
        })
        .catch((err) =>{
          console.log(err)

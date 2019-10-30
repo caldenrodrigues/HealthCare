@@ -134,7 +134,7 @@ io.on('connection', (socket) => {
           strResponse = res.data
           io.sockets.emit('newRegular',strResponse)
           if(strResponse.substring(0,3) == "I a"){
-            connection.query("Insert into pendings values(?,?,?)",[patient_id, myvar, ""], function (err, result, fields) {
+            connection.query("Insert into pendings(p_id, question, answer) values(?,?,?)",[patient_id, myvar, ""], function (err, result, fields) {
               if (err) throw err;
             });
           }
@@ -265,24 +265,27 @@ app.post('/addQuery', (req, result) => {
 
 app.post('/prescription', (req, res) => {
     console.log('prescription page loaded');
+    /*
     connection.query('select name,age from Patient where p_id=101;', function(err, result, fields){
         if (err) throw err;
+        console.log(result[0])
         var json_response = {}
-        json_response["id"] = "103"
+        json_response["id"] = result[0].p_id
         json_response["name"] = result[0].name
         json_response["age"] = result[0].age
         return res.send(json_response);
     });
-
+	*/
+	connection.query('Select p_id, name from Patient', function(err,results,fields){
+		if(err) throw err;
+		return res.send(results)
+	});
 });
 
 app.post('/prescriptionSubmit', (req, res) => { //Enters prescription details into Database
-    prescription_id = random.integer(301, 400);
-    console.log(prescription_id);
-    patient_id = req.body.p_id
+    console.log(req.body);
+    patient_id = req.body.ID
     diagnose = req.body.SELECT;
-    name = req.body.PATIENT;
-    age = req.body.age;
     drug = req.body.DRUG;
     unit = req.body.UNIT;
     dose = req.body.DOSE;
@@ -290,10 +293,9 @@ app.post('/prescriptionSubmit', (req, res) => { //Enters prescription details in
     date = new Date();
     precaution = req.body.PRECAUTION;
     doctor_id = '201';
-    console.log('data received from prescription after submit.');
     connection.query('delete from Prescription where p_id=101', function(err, result, fields){
         if(err) throw err;
-        connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',[prescription_id, patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
+        connection.query('insert into Prescription values(?,?,?,?,?,?,?,?,?,?)',["69", patient_id, date, app_date, diagnose, drug, unit, dose, doctor_id, precaution], function(err, result, fields){
           if(err) throw err;
           console.log("data inserted");
           io.sockets.emit('newRegular',"Thank you for visiting the doctor, here is the details for your next appointment")
@@ -351,9 +353,37 @@ app.post('/getAnswers', (req, res) => { //Retrieve answers from hospital portal 
     if(err) throw error;
     console.log("Answers filled");
     console.log(result);
+    io.sockets.emit('newAlert',"The doctor has answered your query: " + answer)
     return res.send("Success")
   });
 });
+
+app.post('/register', (req,res) => {
+	console.log(req.body);
+	name = req.body.name;
+	address = req.body.address;
+	age = req.body.age;
+	contact = req.body.contact;
+	email = req.body.email;
+	password = req.body.password
+	connection.query('Insert into Patient(name,address,age,contact,email,password) values(?,?,?,?,?,?)', [name, address, age, contact,email,password], function(err,results,fields){
+		if(err) {console.log(err);throw err};
+		return res.sendStatus(200);
+	});
+})
+
+app.post('/login', (req,res) => {
+	console.log(req.body)
+	email = req.body.email;
+	password = req.body.password
+	connection.query('Select password from Patient where email = ?', [email], function(err,results,fields){
+		if(err) throw error;
+		if(results[0].password == password)
+			return res.sendStatus(200)
+		else
+			return res.sendStatus(400)
+	});
+})
 
 //port activation
 server.listen(8081, () => {
