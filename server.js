@@ -386,6 +386,6 @@ app.post('/login', (req,res) => {
 })
 
 //port activation
-server.listen(8081, () => {
-    console.log("Listening on 8081");
+server.listen(8100, () => {
+    console.log("Listening on 8100");
 });
