@@ -115,7 +115,7 @@ methods: {
   }
 },
 created(){
-  axios.post('http://192.168.43.24:8081/getPendings', {
+  axios.post(`${ip}1/getPendings`, {
      })
        .then((res) => {
          console.log(res.data);
