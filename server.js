@@ -31,14 +31,23 @@ connection.connect(function(err) {
     }
 });
 
+var patient_id = 102
+
 io.on('connection', (socket) => {
   console.log('New User')
   flag = false
-  patient_id = '101'
+  //var patient_id = 102
   //io.sockets.emit("changeAppointment")
-  console.log(patient_id)
+  //console.log(patient_id)
+	socket.on('newID',(data) => {
+		console.log("newID")
+		patient_id = data
+	})
+
+
   socket.on('newMessage', (data) => {
     console.log(data)
+    console.log(patient_id)
     myvar = data
     axios.post('http://localhost:5000/testQuery', {
       myvar
@@ -72,7 +81,7 @@ io.on('connection', (socket) => {
         }
         else if(strResponse == "appointment"){
 
-          connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+          connection.query("SELECT Date_format(app_date,?) as app_date,d_id FROM Prescription where p_id = ?",["%Y-%m-%d",patient_id], function (err, result, fields) {
             if (err) throw err;
             appointment_date = result[0].app_date;
             doctor_id = result[0].d_id;
@@ -149,11 +158,13 @@ io.on('connection', (socket) => {
     })
   })
   socket.on("changedAppointment", (data) => {
-    p_id = "101"
+	console.log("Call to Change appointment")
+    p_id = patient_id
     app_date = data
+    console.log(data)
     connection.query('update Prescription set app_date = ? where p_id = ?',[app_date, p_id], function(err, res, fields){
       if (err) throw err;
-      connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
+      connection.query("SELECT Date_format(app_date,?) as app_date,d_id FROM Prescription where p_id = ?",["%Y-%m-%d",patient_id], function (err, result, fields) {
         if (err) throw err;
         appointment_date = result[0].app_date;
         doctor_id = result[0].d_id;
@@ -185,7 +196,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get('/testSocket', function(req, res) {
-  connection.query("SELECT * FROM Prescription where p_id = 101", function (err, result, fields) {
+  connection.query("SELECT * FROM Prescription where p_id = ?",[patient_id], function (err, result, fields) {
     if (err) throw err;
     var json_response = {}
     json_response["drug"] = result[0].drugs;
@@ -328,7 +339,7 @@ app.post('/getQuery', (req, result) => {
 
 app.post('/getPendings', (req, result) => { //Sends list of all pending queries
   console.log("getPendings loaded!");
-  connection.query('select * from pendings where p_id=101', function(err, res, fields){
+  connection.query('select * from pendings', function(err, res, fields){
     if (err) throw err;
     json_response = []
     for(i=0;i<res.length;i++){
@@ -349,11 +360,11 @@ app.post('/getAnswers', (req, res) => { //Retrieve answers from hospital portal 
   question_id = req.body.q_id;
   person_id = req.body.p_id;
   console.log(req.body);
-  connection.query('update pendings set answer=? where q_id=? and p_id=?',[answer, question_id, person_id],function(err, result, fields){
+  connection.query('update pendings set answer=? where q_id=?',[answer, question_id],function(err, result, fields){
     if(err) throw error;
     console.log("Answers filled");
     console.log(result);
-    io.sockets.emit('newAlert',"The doctor has answered your query: " + answer)
+    io.sockets.emit('newDoctorResponse',"The doctor has answered your query: " + answer)
     return res.send("Success")
   });
 });
@@ -376,10 +387,11 @@ app.post('/login', (req,res) => {
 	console.log(req.body)
 	email = req.body.email;
 	password = req.body.password
-	connection.query('Select password from Patient where email = ?', [email], function(err,results,fields){
+	connection.query('Select * from Patient where email = ?', [email], function(err,results,fields){
 		if(err) throw error;
+		console.log(results)
 		if(results[0].password == password)
-			return res.sendStatus(200)
+			return res.send({'id':results[0].p_id})
 		else
 			return res.sendStatus(400)
 	});
