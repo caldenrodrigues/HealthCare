@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/caldenrodrigues/HealthCare#readme",
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "generate-password": "^1.4.1",
